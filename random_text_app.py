@@ -38,19 +38,31 @@ class RandomTextApp:
         self.play_audio_checkbox = tk.Checkbutton(self.frame, text="Play audio", variable=self.play_audio_var, bg="white")
         self.play_audio_checkbox.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 
+        # randomize
+        self.randomize_var = tk.BooleanVar()
+        self.randomize_var.set(False)
+
+        self.randomize_checkbox = tk.Checkbutton(self.frame, text="Randomize", variable=self.randomize_var, bg="white")
+        self.randomize_checkbox.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+
     def on_click(self, event):
         if not self.remaining_strings:
+            self.text_var.set("END")
             return
         if self.text_var.get() == "START":
-            new_text = random.choice(self.remaining_strings)
+            if self.randomize_var.get():
+                new_text = random.choice(self.remaining_strings)
+            else:
+                new_text = self.remaining_strings[0]
             self.text_var.set(new_text)
             self.remaining_strings.remove(new_text)
         else:
-            new_text = random.choice(self.remaining_strings)
+            if self.randomize_var.get():
+                new_text = random.choice(self.remaining_strings)
+            else:
+                new_text = self.remaining_strings[0]
             self.text_var.set(new_text)
             self.remaining_strings.remove(new_text)
-            if not self.remaining_strings:
-                self.text_var.set("END")
         if self.play_audio_var.get():
             audio_file = f"voice_files/{self.text_var.get()}.wav"
             self.voice_player.play(audio_file)
